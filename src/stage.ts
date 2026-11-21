@@ -185,8 +185,9 @@ vec3 ltGridLight(vec3 g) {
 
 export const BAKE_GLSL = /* glsl */ `
 if (bake != 0) {
-  highp ivec2 cell = clamp(ivec2(vUv * vec2(gridCells)), ivec2(0), gridCells - 1);
-  highp int k = int(gridStart) + cell.y * gridCells.x + cell.x;
+  highp ivec2 cells = gridCells;
+  highp ivec2 cell = clamp(ivec2(vUv * vec2(cells)), ivec2(0), cells - 1);
+  highp int k = int(gridStart) + cell.y * cells.x + cell.x;
   highp int n = gridSize;
   vec3 g = vec3(0.0);
   if (k < n * n * n) g = vec3(float(k % n), float((k / n) % n), float(k / (n * n))) * (gridTop / float(n - 1));

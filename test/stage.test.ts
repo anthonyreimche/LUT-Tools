@@ -122,6 +122,13 @@ describe("the bake stage", () => {
     expect(stage.uniforms.find((u) => u.key === "gridStart")?.glslType).toBe("float");
     expect(mediumpInts(BAKE_HELPERS + BAKE_GLSL)).toEqual([]);
   });
+
+  // radeonsi runs a mediump ivec2 uniform as 16-bit, so its float conversion
+  // loses integers past 2048: it is copied into a highp local first.
+  it("converts the cell counts to float only from a highp copy", () => {
+    expect(code(BAKE_GLSL)).not.toMatch(/vec2\s*\(\s*gridCells\s*\)/);
+    expect(code(BAKE_GLSL)).toMatch(/highp\s+ivec2\s+cells\s*=\s*gridCells\s*;/);
+  });
 });
 
 describe("a key's uniform form", () => {

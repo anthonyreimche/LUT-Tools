@@ -1215,7 +1215,7 @@ function Ke() {
 		dormantWhen: { active: 0 }
 	};
 }
-var U = (e) => `${L}.${e}`, qe = "\nvec3 ltGridLight(vec3 g) {\n  return mix(pow((g + 0.055) / 1.055, vec3(2.4)), g / 12.92, vec3(lessThanEqual(g, vec3(0.04045))));\n}\n", Je = "\nif (bake != 0) {\n  highp ivec2 cell = clamp(ivec2(vUv * vec2(gridCells)), ivec2(0), gridCells - 1);\n  highp int k = int(gridStart) + cell.y * gridCells.x + cell.x;\n  highp int n = gridSize;\n  vec3 g = vec3(0.0);\n  if (k < n * n * n) g = vec3(float(k % n), float((k / n) % n), float(k / (n * n))) * (gridTop / float(n - 1));\n  lin = ltGridLight(g);\n}\n";
+var U = (e) => `${L}.${e}`, qe = "\nvec3 ltGridLight(vec3 g) {\n  return mix(pow((g + 0.055) / 1.055, vec3(2.4)), g / 12.92, vec3(lessThanEqual(g, vec3(0.04045))));\n}\n", Je = "\nif (bake != 0) {\n  highp ivec2 cells = gridCells;\n  highp ivec2 cell = clamp(ivec2(vUv * vec2(cells)), ivec2(0), cells - 1);\n  highp int k = int(gridStart) + cell.y * cells.x + cell.x;\n  highp int n = gridSize;\n  vec3 g = vec3(0.0);\n  if (k < n * n * n) g = vec3(float(k % n), float((k / n) % n), float(k / (n * n))) * (gridTop / float(n - 1));\n  lin = ltGridLight(g);\n}\n";
 function Ye() {
 	return {
 		id: L,
