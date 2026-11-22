@@ -134,6 +134,11 @@ function LibraryList({ library, look, current }: { library: Library; look: Photo
     return () => api.develop.setViewValues(null);
   }, []);
 
+  // A preview belongs to the photo it was hovered over: another one opening
+  // with the pointer still on a LUT draws without it.
+  const photoId = api.catalog.useActivePhoto()?.id;
+  React.useEffect(() => () => api.develop.setViewValues(null), [photoId]);
+
   const strength = look.key !== 0 ? look.settings.strength : 1;
   const preview = (entry: StoredLut | null) => api.develop.setViewValues(entry ? previewValues(entry, strength) : null);
 

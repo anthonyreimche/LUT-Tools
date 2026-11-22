@@ -1,7 +1,7 @@
 {
   "id": "lut-tools",
   "name": "LUT Tools",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Apply 3D and 1D LUTs (.cube) and HaldCLUT film simulations from a library kept across projects, and export a photo's look as a .cube or a HaldCLUT.",
   "author": "Anthony Reimche",
   "main": "dist/index.js",

@@ -848,13 +848,13 @@ async function Ee(e) {
 		scale: 255
 	};
 }
-function De(e, t) {
+function P(e, t) {
 	let n = new Uint8Array(12 + t.length), r = new DataView(n.buffer);
 	r.setUint32(0, t.length);
 	for (let t = 0; t < 4; t++) n[4 + t] = e.charCodeAt(t);
 	return n.set(t, 8), r.setUint32(8 + t.length, be(n, 4, 8 + t.length)), n;
 }
-async function Oe(e, t, n) {
+async function De(e, t, n) {
 	let r = e * 6, i = new Uint8Array(t * (r + 1));
 	for (let a = 0; a < t; a++) {
 		let t = a * (r + 1);
@@ -867,16 +867,16 @@ async function Oe(e, t, n) {
 	o.setUint32(0, e), o.setUint32(4, t), a[8] = 16, a[9] = 2;
 	let s = [
 		Uint8Array.from(xe),
-		De("IHDR", a),
-		De("IDAT", await ye(i)),
-		De("IEND", /* @__PURE__ */ new Uint8Array())
+		P("IHDR", a),
+		P("IDAT", await ye(i)),
+		P("IEND", /* @__PURE__ */ new Uint8Array())
 	], c = new Uint8Array(s.reduce((e, t) => e + t.length, 0)), l = 0;
 	for (let e of s) c.set(e, l), l += e.length;
 	return c;
 }
 //#endregion
 //#region src/export-file.ts
-var P = [
+var Oe = [
 	{
 		id: "cube-17",
 		label: ".cube, 17 points",
@@ -901,7 +901,7 @@ var P = [
 		size: 64,
 		hald: 8
 	}
-], ke = (e) => P.find((t) => t.id === e) ?? P[1];
+], ke = (e) => Oe.find((t) => t.id === e) ?? Oe[1];
 function Ae(e) {
 	let t = e.replace(/[\\/:*?"<>|\u0000-\u001f]/g, " ").replace(/\s+/g, " ").trim();
 	return t === "" ? "Look" : t.slice(0, 120);
@@ -909,7 +909,7 @@ function Ae(e) {
 async function je(e, t, n, r) {
 	let i = Ae(n);
 	if (t.hald) {
-		let n = await Oe(t.hald ** 3, t.hald ** 3, ge(e, t.hald));
+		let n = await De(t.hald ** 3, t.hald ** 3, ge(e, t.hald));
 		return {
 			blob: new Blob([n], { type: "image/png" }),
 			fileName: `${i}.png`
@@ -1977,13 +1977,15 @@ function Wt({ library: e, look: t, current: n }) {
 	Lt(e);
 	let { ContextMenu: r } = J.components, i = J.develop.useParamScope(), [a, o] = q.useState(""), [s, c] = q.useState(/* @__PURE__ */ new Set()), [l, u] = q.useState(null), [d, f] = q.useState(null), [p, m] = q.useState(null), h = q.useRef(null), g = q.useRef(null);
 	q.useEffect(() => (g.current?.setAttribute("webkitdirectory", ""), () => J.develop.setViewValues(null)), []);
-	let _ = t.key === 0 ? 1 : t.settings.strength, v = (e) => J.develop.setViewValues(e ? zt(e, _) : null), y = (e) => {
-		v(null), i.setParams(Re(e.key, e.sig, e.layout, e.name, {
+	let _ = J.catalog.useActivePhoto()?.id;
+	q.useEffect(() => () => J.develop.setViewValues(null), [_]);
+	let v = t.key === 0 ? 1 : t.settings.strength, y = (e) => J.develop.setViewValues(e ? zt(e, v) : null), b = (e) => {
+		y(null), i.setParams(Re(e.key, e.sig, e.layout, e.name, {
 			strength: t.key === 0 ? 1 : t.settings.strength || 1,
 			inEnc: e.inEnc,
 			outEnc: e.outEnc
 		})), i.commit("LUT");
-	}, b = async (t) => {
+	}, x = async (t) => {
 		let n = [...t?.files ?? []].filter((e) => St(e.name));
 		if (t && (t.value = ""), n.length !== 0) try {
 			await Ht(await e.add(n.map((e) => ({
@@ -1993,21 +1995,21 @@ function Wt({ library: e, look: t, current: n }) {
 		} finally {
 			m(null);
 		}
-	}, x = async (t, n) => {
+	}, S = async (t, n) => {
 		await J.ui.confirmDialog({
 			title: `Remove ${n} from the library?`,
 			message: "Photos that use it keep their settings but are drawn without it, and say so, until you add the file again.",
 			confirmLabel: "Remove",
 			variant: "danger"
 		}) && await e.remove(t.map((e) => e.id));
-	}, S = () => {
+	}, C = () => {
 		l && e.rename(l.id, l.name), u(null);
-	}, C = Vt(e.entries(), a), w = (e) => /* @__PURE__ */ q.createElement("div", {
+	}, w = Vt(e.entries(), a), T = (e) => /* @__PURE__ */ q.createElement("div", {
 		key: e.id,
 		className: `${X.row}${n?.id === e.id ? ` ${X.current}` : ""}`,
-		onMouseEnter: () => v(e),
+		onMouseEnter: () => y(e),
 		onContextMenu: (t) => {
-			t.preventDefault(), v(null), f({
+			t.preventDefault(), y(null), f({
 				x: t.clientX,
 				y: t.clientY,
 				entry: e
@@ -2022,19 +2024,19 @@ function Wt({ library: e, look: t, current: n }) {
 			id: e.id,
 			name: t.target.value
 		}),
-		onBlur: S,
+		onBlur: C,
 		onKeyDown: (e) => {
-			e.key === "Enter" && S(), e.key === "Escape" && u(null);
+			e.key === "Enter" && C(), e.key === "Escape" && u(null);
 		}
 	}) : /* @__PURE__ */ q.createElement("button", {
 		className: X.apply,
 		title: e.folder ? `${e.folder}/${e.name}` : e.name,
-		onClick: () => y(e)
+		onClick: () => b(e)
 	}, e.name), /* @__PURE__ */ q.createElement("button", {
 		className: X.delete,
 		title: "Remove from library",
 		"aria-label": `Remove ${e.name}`,
-		onClick: () => void x([e], `“${e.name}”`)
+		onClick: () => void S([e], `“${e.name}”`)
 	}, "✕"));
 	return /* @__PURE__ */ q.createElement("div", null, /* @__PURE__ */ q.createElement("div", { className: X.toolbar }, /* @__PURE__ */ q.createElement("button", {
 		className: X.tool,
@@ -2053,12 +2055,12 @@ function Wt({ library: e, look: t, current: n }) {
 		multiple: !0,
 		accept: ".cube,.png,.tif,.tiff,.jpg,.jpeg",
 		style: { display: "none" },
-		onChange: (e) => void b(e.currentTarget)
+		onChange: (e) => void x(e.currentTarget)
 	}), /* @__PURE__ */ q.createElement("input", {
 		ref: g,
 		type: "file",
 		style: { display: "none" },
-		onChange: (e) => void b(e.currentTarget)
+		onChange: (e) => void x(e.currentTarget)
 	}), e.entries().length === 0 ? /* @__PURE__ */ q.createElement("p", { className: X.empty }, "The library is empty. Add .cube files or HaldCLUT images.") : /* @__PURE__ */ q.createElement(q.Fragment, null, /* @__PURE__ */ q.createElement("input", {
 		className: X.search,
 		type: "search",
@@ -2068,11 +2070,11 @@ function Wt({ library: e, look: t, current: n }) {
 		onChange: (e) => o(e.target.value)
 	}), /* @__PURE__ */ q.createElement("div", {
 		className: X.sections,
-		onMouseLeave: () => v(null)
-	}, C.length === 0 ? /* @__PURE__ */ q.createElement("p", { className: X.empty }, "No LUT matches.") : null, C.map(({ folder: e, items: t }) => e === "" ? /* @__PURE__ */ q.createElement("div", {
+		onMouseLeave: () => y(null)
+	}, w.length === 0 ? /* @__PURE__ */ q.createElement("p", { className: X.empty }, "No LUT matches.") : null, w.map(({ folder: e, items: t }) => e === "" ? /* @__PURE__ */ q.createElement("div", {
 		key: "",
 		className: X.rows
-	}, t.map(w)) : /* @__PURE__ */ q.createElement("div", { key: e }, /* @__PURE__ */ q.createElement("button", {
+	}, t.map(T)) : /* @__PURE__ */ q.createElement("div", { key: e }, /* @__PURE__ */ q.createElement("button", {
 		className: X.groupHeader,
 		onClick: () => c((t) => {
 			let n = new Set(t);
@@ -2085,7 +2087,7 @@ function Wt({ library: e, look: t, current: n }) {
 				folder: e
 			});
 		}
-	}, /* @__PURE__ */ q.createElement("span", { className: X.caret }, s.has(e) && !a ? "▸" : "▾"), /* @__PURE__ */ q.createElement("span", { className: X.groupName }, e), /* @__PURE__ */ q.createElement("span", { className: X.count }, t.length)), s.has(e) && !a ? null : /* @__PURE__ */ q.createElement("div", { className: X.rows }, t.map(w))))), /* @__PURE__ */ q.createElement(Gt, {
+	}, /* @__PURE__ */ q.createElement("span", { className: X.caret }, s.has(e) && !a ? "▸" : "▾"), /* @__PURE__ */ q.createElement("span", { className: X.groupName }, e), /* @__PURE__ */ q.createElement("span", { className: X.count }, t.length)), s.has(e) && !a ? null : /* @__PURE__ */ q.createElement("div", { className: X.rows }, t.map(T))))), /* @__PURE__ */ q.createElement(Gt, {
 		count: e.entries().length,
 		usage: e.usage()
 	})), d ? /* @__PURE__ */ q.createElement(r, {
@@ -2104,14 +2106,14 @@ function Wt({ library: e, look: t, current: n }) {
 			{
 				label: "Remove from library",
 				danger: !0,
-				onClick: () => d.entry && void x([d.entry], `“${d.entry.name}”`)
+				onClick: () => d.entry && void S([d.entry], `“${d.entry.name}”`)
 			}
 		] : [{
 			label: "Remove folder from library",
 			danger: !0,
 			onClick: () => {
 				let t = e.entries().filter((e) => e.folder === d.folder);
-				x(t, `${t.length} LUT${t.length === 1 ? "" : "s"} in “${d.folder}”`);
+				S(t, `${t.length} LUT${t.length === 1 ? "" : "s"} in “${d.folder}”`);
 			}
 		}]
 	}) : null);
@@ -2143,7 +2145,7 @@ function Kt() {
 	return /* @__PURE__ */ q.createElement(n, { gap: 6 }, /* @__PURE__ */ q.createElement(e, {
 		ariaLabel: "LUT format",
 		value: o,
-		options: P.map((e) => ({
+		options: Oe.map((e) => ({
 			value: e.id,
 			label: e.label
 		})),

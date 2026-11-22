@@ -1,7 +1,7 @@
 {
   "name": "safelight-lut-tools",
   "private": true,
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "LUT Tools extension for Safelight: .cube and HaldCLUT LUTs from a library, and exporting a look as a LUT.",
   "type": "module",
   "scripts": {

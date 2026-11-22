@@ -71,6 +71,19 @@ describe("the LUT panel", () => {
     expect(rig.viewValues.at(-1)).toBeNull();
   });
 
+  // SafeLight #278: with the pointer resting on a LUT, the next photo opened
+  // (arrow keys, the filmstrip) was drawn with the preview, which isn't its edit.
+  it("stops previewing when another photo opens", async () => {
+    const { rig, library } = await setup();
+    const photo = (id: string) => ({ id, filename: `${id}.raf` }) as unknown as Parameters<Rig["setPhoto"]>[0];
+    rig.setPhoto(photo("A"));
+    render(<LutPanel library={library} />);
+    fireEvent.mouseEnter(screen.getByText("Portra").parentElement as HTMLElement);
+    expect(rig.viewValues.at(-1)).not.toBeNull();
+    act(() => rig.setPhoto(photo("B")));
+    expect(rig.viewValues.at(-1)).toBeNull();
+  });
+
   it("puts a LUT on the photo as one undo step, with the encodings last used with it", async () => {
     const { rig, library } = await setup();
     await library.setEncodings(entry(library, "Velvia").id, 1, 1);
