@@ -2324,6 +2324,7 @@ function fn(e) {
 			module: "develop",
 			direction: "right"
 		},
+		modules: ["develop"],
 		onReset: dn
 	});
 }

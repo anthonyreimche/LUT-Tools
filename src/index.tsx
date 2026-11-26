@@ -56,6 +56,7 @@ export function activate(host: SafelightAPI): void {
     title: "LUT",
     component: () => <LutPanel library={active} />,
     defaultDock: { module: "develop", direction: "right" },
+    modules: ["develop"],
     onReset: reset,
   });
 }
